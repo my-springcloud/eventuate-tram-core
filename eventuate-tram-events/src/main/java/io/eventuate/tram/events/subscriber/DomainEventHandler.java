@@ -6,9 +6,15 @@ import io.eventuate.tram.messaging.common.Message;
 
 import java.util.function.Consumer;
 
+/**
+ * 领域事件处理器
+ */
 public class DomainEventHandler {
+  /** 领域聚合对象的全限定类名 */
   private String aggregateType;
+  /** 领域聚合对象支持的全部领域事件 */
   private final Class<DomainEvent> eventClass;
+  /** 领域事件处理逻辑 */
   private final Consumer<DomainEventEnvelope<DomainEvent>> handler;
 
   public DomainEventHandler(String aggregateType, Class<DomainEvent> eventClass, Consumer<DomainEventEnvelope<DomainEvent>> handler) {
@@ -22,6 +28,10 @@ public class DomainEventHandler {
             && eventClass.getName().equals(message.getRequiredHeader(EventMessageHeaders.EVENT_TYPE));
   }
 
+  /**
+   * 执行具体的事件处理逻辑
+   * @param dee
+   */
   public void invoke(DomainEventEnvelope<DomainEvent> dee) {
     handler.accept(dee);
   }

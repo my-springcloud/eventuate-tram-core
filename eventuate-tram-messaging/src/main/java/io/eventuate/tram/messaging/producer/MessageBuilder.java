@@ -11,7 +11,13 @@ import java.util.Map;
  */
 public class MessageBuilder {
 
+  /**
+   * 数据
+   */
   protected String body;
+  /**
+   * 头信息
+   */
   protected Map<String, String> headers = new HashMap<>();
 
   protected MessageBuilder() {

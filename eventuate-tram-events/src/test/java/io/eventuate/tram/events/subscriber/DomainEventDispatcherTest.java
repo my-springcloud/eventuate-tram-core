@@ -35,7 +35,9 @@ public class DomainEventDispatcherTest {
                 .onEvent(MyDomainEvent.class, this::handleAccountDebited)
                 .build();
     }
+    // 事件处理逻辑
     public void handleAccountDebited(DomainEventEnvelope<MyDomainEvent> event) {
+      // 将信封添加到队列
       queue.add(event);
     }
 
@@ -48,25 +50,29 @@ public class DomainEventDispatcherTest {
   @Test
   public void shouldDispatchMessage() {
     MyTarget target = new MyTarget();
-
+    // 消息消费者
     MessageConsumer messageConsumer = mock(MessageConsumer.class);
 
     DomainEventNameMapping domainEventNameMapping = mock(DomainEventNameMapping.class);
 
     when(domainEventNameMapping.externalEventTypeToEventClassName(aggregateType, externalEventType))
             .thenReturn(MyDomainEvent.class.getName());
-
+    // 事件派发器
     DomainEventDispatcher dispatcher =
             new DomainEventDispatcher(eventDispatcherId, target.domainEventHandlers(), messageConsumer, domainEventNameMapping);
 
     dispatcher.initialize();
 
+    // 派发消息
+    dispatcher.messageHandler(
+            DomainEventPublisherImpl.makeMessageForDomainEvent(
+                    aggregateType,
+                    aggregateId,
+                    Collections.singletonMap(Message.ID, messageId),
+                    new MyDomainEvent(),
+                    externalEventType));
 
-    dispatcher.messageHandler(DomainEventPublisherImpl.makeMessageForDomainEvent(aggregateType,
-            aggregateId,
-            Collections.singletonMap(Message.ID, messageId),
-            new MyDomainEvent(), externalEventType));
-
+    // 获取信封
     DomainEventEnvelope<?> dee = target.queue.peek();
 
     assertNotNull(dee);

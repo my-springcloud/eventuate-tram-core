@@ -5,6 +5,9 @@ import io.eventuate.tram.messaging.consumer.MessageConsumer;
 
 public class DomainEventDispatcherFactory {
 
+  /**
+   * 消息消费端，每个消息消费端都订阅了消息中间件
+   */
   protected MessageConsumer messageConsumer;
   protected DomainEventNameMapping domainEventNameMapping;
 

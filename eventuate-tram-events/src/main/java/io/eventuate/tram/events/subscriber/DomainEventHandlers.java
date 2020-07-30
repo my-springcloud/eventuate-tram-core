@@ -8,6 +8,9 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * 领域事件处理容器
+ */
 public class DomainEventHandlers {
   private List<DomainEventHandler> handlers;
 
@@ -15,6 +18,10 @@ public class DomainEventHandlers {
     this.handlers = handlers;
   }
 
+  /**
+   * 获取支持的所有领域聚合对象
+   * @return
+   */
   public Set<String> getAggregateTypesAndEvents() {
     return handlers.stream().map(DomainEventHandler::getAggregateType).collect(toSet());
   }
